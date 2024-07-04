@@ -1,5 +1,8 @@
-package fileHandle;
+package fileHandle.async;
 
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
@@ -9,8 +12,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@Service
 public class AsyncFileIO {
-    public static void main(String[] args) {
+
+    public void performAsyncFileIO(){
         try {
             String directory = "C:\\Users\\2301065\\Desktop\\demo\\demo\\src\\main\\java\\FileHandle";
             String filename = "example1.txt";
@@ -26,7 +31,7 @@ public class AsyncFileIO {
 
             try {
                 int bytesWritten = writeResult.get(5, TimeUnit.SECONDS);// 五秒逾時
-                System.out.println("Finish  bytes size : " + bytesWritten );
+                System.out.println("Finish bytes size : " + bytesWritten );
             } catch (TimeoutException e) {
                 System.out.println("Writing timeout.");
                 writeResult.cancel(true);// timeout時取消操作
