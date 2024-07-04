@@ -1,4 +1,4 @@
-package FileHandle;
+package fileHandle;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
@@ -25,7 +25,7 @@ public class AsyncFileIO {
             Future<Integer> writeResult = fileChannel.write(buffer, 0);
 
             try {
-                int bytesWritten = writeResult.get(5, TimeUnit.SECONDS);// 等待寫入完成，最多等待5秒
+                int bytesWritten = writeResult.get(5, TimeUnit.SECONDS);// 五秒逾時
                 System.out.println("Finish  bytes size : " + bytesWritten );
             } catch (TimeoutException e) {
                 System.out.println("Writing timeout.");
@@ -40,11 +40,21 @@ public class AsyncFileIO {
             ByteBuffer readBuffer = ByteBuffer.allocate(1024);
             Future<Integer> readResult = fileChannel.read(readBuffer, 0);
 
-            while (!readResult.isDone()) {
-                System.out.println("File is reading......");
+            try{
+                int bytesReader = readResult.get(5,TimeUnit.SECONDS); //五秒逾時
+                readBuffer.flip(); // buffer 從寫模式切換到讀模式，沒有用flip的話會直接當下的position開始讀，這樣就會錯過之前所有寫的資料
+                System.out.println("Finish read bytes size : " + bytesReader);
+                System.out.println("Content is : " + new String(readBuffer.array(),0,bytesReader));
+            }catch (TimeoutException e) {
+                System.out.println("Writing timeout.");
+                writeResult.cancel(true);// timeout時取消操作
             }
 
-            // 7. 處理讀取的數據
+//            while (!readResult.isDone()) {
+//                System.out.println("File is reading......");
+//            }
+
+            //處理讀取的數據
             readBuffer.flip();
             System.out.println("讀取的內容: " + new String(readBuffer.array()).trim());
 
