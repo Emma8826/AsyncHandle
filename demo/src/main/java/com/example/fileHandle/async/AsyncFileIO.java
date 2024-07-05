@@ -1,4 +1,4 @@
-package fileHandle.async;
+package com.example.fileHandle.async;
 
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class AsyncFileIO {
 
     public void performAsyncFileIO(){
         try {
-            String directory = "C:\\Users\\2301065\\Desktop\\demo\\demo\\src\\main\\java\\FileHandle";
+            String directory = "C:\\Users\\2301065\\Desktop\\demo\\demo\\src\\main\\java\\com\\example\\fileHandle";
             String filename = "example1.txt";
             Path path = Paths.get(directory, filename); //創建文件路徑
             //java.nio.file.Files.createDirectories(path.getParent());  // 如果目綠不在就創建路徑(通過確保父目錄存在為後續創建文件做好了準備)
